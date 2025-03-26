@@ -174,8 +174,8 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       className={cn(
-        'w-full relative max-w-xl mx-auto hover:texte-white focus-within:outline-2 focus-within:outline-white  hover:bg-[#2A2A2A] bg-[#252525] dark:bg-[#252525] h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200',
-        value && 'bg-[#2A2A2A]'
+        'w-full relative max-w-xl mx-auto hover:texte-white focus-within:outline-2 focus-within:outline-white hover:bg-[#2A2A2A] bg-[#252525] dark:bg-[#252525] h-10 md:h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200',
+      value && 'bg-[#2A2A2A]'
       )}
       onSubmit={handleSubmit}>
       <canvas
@@ -198,17 +198,18 @@ export function PlaceholdersAndVanishInput({
         value={value}
         type="text"
         className={cn(
-          'w-full relative text-xl z-50 dark:text-white text-white h-full rounded-full focus:outline-none focus:ring-0 ml-3 pl-10 sm:pl-12 pr-20',
-          animating && 'text-transparent dark:text-transparent'
+          'w-full relative text-base md:text-xl z-50 dark:text-white text-white h-full rounded-full focus:outline-none focus:ring-0 ml-2 md:ml-3 pl-8 md:pl-10 lg:pl-12 pr-16 md:pr-20',
+        animating && 'text-transparent dark:text-transparent'
         )}
       />
 
       <button
         disabled={!value}
         type="submit"
-        className="absolute start-0 ml-3 right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full  disabled:bg-[#252525] hover:bg-[#2A2A2A] bg-[#2A2A2A] dark:bg-[#2A2A2A] dark:disabled:bg-[#252525] transition duration-200 flex items-center justify-center">
+				onClick={handleSubmit}
+        className="absolute start-0 ml-2 md:ml-3 right-2 top-1/2 z-50 -translate-y-1/2 h-6 w-6 md:h-8 md:w-8 rounded-full disabled:bg-[#252525] hover:bg-[#2A2A2A] bg-[#2A2A2A] dark:bg-[#2A2A2A] dark:disabled:bg-[#252525] transition duration-200 flex items-center justify-center">
         <SearchIcon
-          className="cursor-pointer"
+          className="cursor-pointer w-4 h-4 md:w-6 md:h-6"
           color="#BABABA"
           size={30}
         />
@@ -234,7 +235,7 @@ export function PlaceholdersAndVanishInput({
                 duration: 0.3,
                 ease: 'linear'
               }}
-              className="dark:text-[#2A2A2A] text-lg font-normal text-[#BABABA] pl-4 sm:pl-15 text-left w-[calc(100%-2rem)] truncate">
+              className="dark:text-[#2A2A2A] text-base md:text-lg font-normal text-[#BABABA] pl-10 sm:pl-15 md:pl-13 lg:pl-15 text-left w-[calc(100%-2rem)] truncate">
               {placeholders[currentPlaceholder]}
             </motion.p>
           )}
