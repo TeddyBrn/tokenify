@@ -7,6 +7,8 @@ import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-van
 import { WelcomeSection } from '@/components/ui/welcome-section';
 import { SearchStatus } from '@/components/ui/search-status';
 import { ArtistCard } from '@/components/ui/artist-card';
+import { TopTracks } from '@/components/ui/top-tracks';
+import { Albums } from '@/components/ui/albums';
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
 const CLIENT_SECRET = process.env.NEXT_PUBLIC_CLIENT_SECRET;
@@ -15,8 +17,12 @@ export default function Home() {
   const placeholders = ['Search for an artist', 'Search for an artist'];
 
   const [searchInput, setSearchInput] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [artistData, setArtistData] = useState(null);
+  const [topTracks, setTopTracks] = useState(null);
+  const [albums, setAlbums] = useState(null);
 
   useEffect(() => {
     // API Access Token
@@ -44,17 +50,19 @@ export default function Home() {
 
   // Input change event handler
   const handleChange = (e) => {
-    console.log(e.target.value);
     setSearchInput(e.target.value);
+    setHasSearched(false);
   };
 
   const onSubmit = (e) => {
-    e.preventDefault();
     searchArtist();
+    setIsSearching(true);
+    setHasSearched(true);
   };
 
   // Search
   async function searchArtist() {
+    setIsSearching(true);
     // Search for artist
     if (searchInput) {
       const response = await fetch(
@@ -80,6 +88,14 @@ export default function Home() {
         return normalizedName.includes(normalizedInput);
       });
 
+      if (!findArtist) {
+        setArtistData(null);
+        setTopTracks(null);
+        setAlbums(null);
+        setIsSearching(false);
+        return;
+      }
+
       const artistData = {
         name: findArtist.name,
         genres: findArtist.genres,
@@ -89,8 +105,6 @@ export default function Home() {
       };
 
       setArtistData(artistData);
-
-      console.log(artistData);
 
       // Get albums of the artist
       if (findArtist) {
@@ -104,13 +118,16 @@ export default function Home() {
         );
         const dataAlbums = await response.json();
 
-        const albumData = {
-          image: dataAlbums.items[0].images[0].url,
-          name: dataAlbums.items[0].name,
-          date: dataAlbums.items[0].release_date
-        };
+        const albumsData = dataAlbums.items.map((album) => ({
+          image: album.images[0].url,
+          name: album.name,
+          spotifyUrl: album.external_urls.spotify,
+          date: album.release_date
+        }));
 
-        console.log(albumData);
+        setAlbums(albumsData);
+
+        console.log(dataAlbums.items[0]);
       }
 
       // Get top tracks of the artist
@@ -125,20 +142,22 @@ export default function Home() {
         );
         const dataTopTracks = await response.json();
 
-        const trackData = {
-          image: dataTopTracks.tracks[0].album.images[0].url,
-          name: dataTopTracks.tracks[0].name,
-          duration: dataTopTracks.tracks[0].duration_ms
-        };
+        const tracksData = dataTopTracks.tracks.map((track) => ({
+          image: track.album.images[0].url,
+          name: track.name,
+          spotifyUrl: track.external_urls.spotify,
+          duration: track.duration_ms
+        }));
 
-        console.log(trackData);
+        setTopTracks(tracksData);
       }
     }
+    setIsSearching(false);
   }
 
   return (
     <div
-      className={`${roboto.variable} ${lalezar.variable} font-sans h-screen overflow-hidden`}>
+      className={`${roboto.variable} ${lalezar.variable} font-sans h-screen overflow-auto scrollbar-hide`}>
       <div className="bg-[#111111] p-3 md:p-5 flex flex-col md:flex-row items-center gap-4">
         <div className="flex items-center text gap-4">
           <Image
@@ -147,6 +166,7 @@ export default function Home() {
             width={50}
             height={50}
             priority={true}
+            loading="eager"
             className="w-8 h-8 md:w-12 md:h-12 lg:w-[50px] lg:h-[50px]"
           />
           <h1 className="font-['Lalezar'] items-center text text-center text-[#39D66E] text-sm sm:text-sm md:text-4xl lg:text-4xl">
@@ -160,12 +180,18 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col justify-center items-center h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636]  px-4 py-8 md:py-12">
-        {!searchInput ? (
+      <div className="flex flex-col justify-center items-center h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636]  px-4 py-8 md:py-12 ">
+        {!hasSearched ? (
           <WelcomeSection />
         ) : artistData ? (
-          <ArtistCard artist={artistData} />
-        ) : (
+          <div className="flex flex-col gap-6 w-full max-w-6xl">
+            <div className="flex flex-col md:flex-row gap-6">
+              <ArtistCard artist={artistData} />
+              {topTracks && <TopTracks tracks={topTracks} />}
+            </div>
+            {albums && <Albums albums={albums} />}
+          </div>
+        ) : isSearching ? null : (
           <SearchStatus />
         )}
       </div>
