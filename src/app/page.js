@@ -1,8 +1,8 @@
 'use client';
 import Image from 'next/image';
 import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
-import { GradualSpacing } from '@/components/ui/gradual-spacing';
-import { FadeText } from "@/components/ui/fade-text"
+import { WelcomeSection } from '@/components/ui/welcome-section';
+import { SearchStatus } from '@/components/ui/search-status';
 import { Roboto } from 'next/font/google';
 import { useState, useEffect } from 'react';
 require('dotenv').config();
@@ -41,7 +41,20 @@ export default function Home() {
       });
   }, []);
 
+  // Input change event handler
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setSearchInput(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    searchArtist();
+  };
+
+  // Search
   async function searchArtist() {
+    // Search for artist
     if (searchInput) {
       const response = await fetch(
         `https://api.spotify.com/v1/search?q=${searchInput}&type=artist&limit=1`,
@@ -59,46 +72,61 @@ export default function Home() {
         return pattern.test(art.name);
       });
 
+      const artistName = findArtist.name;
+      const artistGenres = findArtist.genres;
+      const artistFollowers = findArtist.followers.total;
+      const artistSpotifyUrl = findArtist.external_urls.spotify;
+      const artistImage = findArtist.images[0].url;
+
+      console.log(
+        artistName,
+        artistGenres,
+        artistFollowers,
+        artistSpotifyUrl,
+        artistImage
+      );
+
+      // Get albums of the artist
       if (findArtist) {
-        const id = findArtist.id;
-        console.log(id);
         const response = await fetch(
-          `https://api.spotify.com/v1/artists/${id}/albums?include_groups=album&market=FR`,
+          `https://api.spotify.com/v1/artists/${findArtist.id}/albums?include_groups=album&market=FR`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`
             }
           }
         );
-        const data = await response.json();
-        console.log(data.items);
+        const dataAlbums = await response.json();
+        console.log(dataAlbums.items);
+
+        const albumImages = dataAlbums.items[0].images[0].url;
+        const albumName = dataAlbums.items[0].name;
+        const albumDate = dataAlbums.items[0].release_date;
+
+        console.log(albumImages, albumName, albumDate);
       }
 
+      // Get top tracks of the artist
       if (findArtist) {
-        const id = findArtist.id;
-        console.log(id);
         const response = await fetch(
-          `https://api.spotify.com/v1/artists/${id}/top-tracks?market=fr`,
+          `https://api.spotify.com/v1/artists/${findArtist.id}/top-tracks?market=fr`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`
             }
           }
         );
-        const data = await response.json();
-        console.log(data.tracks);
+        const dataTopTracks = await response.json();
+        console.log(dataTopTracks.tracks);
+				
+        const trackImage = dataTopTracks.tracks[0].album.images[0].url;
+        const trackName = dataTopTracks.tracks[0].name;
+        const trackDuration = dataTopTracks.tracks[0].duration_ms;
+
+        console.log(trackImage, trackName, trackDuration);
       }
     }
   }
-
-  const handleChange = (e) => {
-    console.log(e.target.value);
-    setSearchInput(e.target.value);
-  };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    searchArtist();
-  };
 
   return (
     <div className={`${roboto.className} h-screen overflow-hidden`}>
@@ -124,51 +152,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col justify-center items-center h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636]  px-4 py-8 md:py-12">
-        <GradualSpacing
-          className="font-display text-center text-4xl font-bold -tracking-widest mb-8 text-[#39D66E] dark:text-white md:text-8xl md:leading-[5rem]"
-          text="What is Tokenify ?"
-        />
-				<FadeText
-        className="text-6xl font-bold text-[#BABABA] dark:text-white"
-        direction="up"
-        framerProps={{
-          show: { transition: { delay: 1} },
-        }}
-        text="Find an artist"
-      />
-			<FadeText
-        className="text-6xl font-bold text-[#BABABA] dark:text-white"
-        direction="up"
-        framerProps={{
-          show: { transition: { delay: 2 } },
-        }}
-        text="Their best songs"
-      />
-			<FadeText
-        className="text-6xl font-bold text-[#BABABA] dark:text-white"
-        direction="up"
-        framerProps={{
-          show: { transition: { delay: 3} },
-        }}
-        text="Their albums"
-      />
-        {/* <Image
-          src="/not-found.png"
-          alt="spotify"
-          width={300}
-          height={300}
-					priority={true}
-          className="w-[180px] md:w-[250px] lg:w-[300px] h-auto"
-        />
-        <p className="text-[#e9e9e9] text-2xl md:text-4xl lg:text-6xl mt-8 md:mt-16 lg:mt-20 text-center">
-          No Results Found
-        </p>
-        <p className="text-[#BABABA] text-lg md:text-xl lg:text-2xl mt-6 md:mt-8 lg:mt-10 text-center max-w-[90%] md:max-w-[80%]">
-          Sorry, there are no results for this search.
-        </p>
-        <p className="text-[#BABABA] text-lg md:text-xl lg:text-2xl mt-3 md:mt-4 lg:mt-5 text-center">
-          Please try another artist name.
-        </p> */}
+			{!searchInput ? <WelcomeSection /> : <SearchStatus />}
       </div>
     </div>
   );
