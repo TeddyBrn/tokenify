@@ -1,13 +1,13 @@
 'use client';
+require('dotenv').config();
 import Image from 'next/image';
+import { roboto, lalezar } from '@/lib/fonts';
+import { useState, useEffect } from 'react';
 import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
 import { WelcomeSection } from '@/components/ui/welcome-section';
 import { SearchStatus } from '@/components/ui/search-status';
-import { Roboto } from 'next/font/google';
-import { useState, useEffect } from 'react';
-require('dotenv').config();
+import { ArtistCard } from '@/components/ui/artist-card';
 
-const roboto = Roboto({ subsets: ['latin'] });
 const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
 const CLIENT_SECRET = process.env.NEXT_PUBLIC_CLIENT_SECRET;
 
@@ -16,6 +16,7 @@ export default function Home() {
 
   const [searchInput, setSearchInput] = useState('');
   const [accessToken, setAccessToken] = useState('');
+  const [artistData, setArtistData] = useState(null);
 
   useEffect(() => {
     // API Access Token
@@ -65,26 +66,31 @@ export default function Home() {
         }
       );
       const data = await response.json();
-      console.log(data.artists.items[0]);
+
+      const normalizeString = (str) => {
+        return str
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase();
+      };
 
       const findArtist = data.artists?.items.find((art) => {
-        const pattern = new RegExp(searchInput, 'i');
-        return pattern.test(art.name);
+        const normalizedInput = normalizeString(searchInput);
+        const normalizedName = normalizeString(art.name);
+        return normalizedName.includes(normalizedInput);
       });
 
-      const artistName = findArtist.name;
-      const artistGenres = findArtist.genres;
-      const artistFollowers = findArtist.followers.total;
-      const artistSpotifyUrl = findArtist.external_urls.spotify;
-      const artistImage = findArtist.images[0].url;
+      const artistData = {
+        name: findArtist.name,
+        genres: findArtist.genres,
+        followers: findArtist.followers.total,
+        spotifyUrl: findArtist.external_urls.spotify,
+        image: findArtist.images[0].url
+      };
 
-      console.log(
-        artistName,
-        artistGenres,
-        artistFollowers,
-        artistSpotifyUrl,
-        artistImage
-      );
+      setArtistData(artistData);
+
+      console.log(artistData);
 
       // Get albums of the artist
       if (findArtist) {
@@ -97,13 +103,14 @@ export default function Home() {
           }
         );
         const dataAlbums = await response.json();
-        console.log(dataAlbums.items);
 
-        const albumImages = dataAlbums.items[0].images[0].url;
-        const albumName = dataAlbums.items[0].name;
-        const albumDate = dataAlbums.items[0].release_date;
+        const albumData = {
+          image: dataAlbums.items[0].images[0].url,
+          name: dataAlbums.items[0].name,
+          date: dataAlbums.items[0].release_date
+        };
 
-        console.log(albumImages, albumName, albumDate);
+        console.log(albumData);
       }
 
       // Get top tracks of the artist
@@ -117,21 +124,23 @@ export default function Home() {
           }
         );
         const dataTopTracks = await response.json();
-        console.log(dataTopTracks.tracks);
-				
-        const trackImage = dataTopTracks.tracks[0].album.images[0].url;
-        const trackName = dataTopTracks.tracks[0].name;
-        const trackDuration = dataTopTracks.tracks[0].duration_ms;
 
-        console.log(trackImage, trackName, trackDuration);
+        const trackData = {
+          image: dataTopTracks.tracks[0].album.images[0].url,
+          name: dataTopTracks.tracks[0].name,
+          duration: dataTopTracks.tracks[0].duration_ms
+        };
+
+        console.log(trackData);
       }
     }
   }
 
   return (
-    <div className={`${roboto.className} h-screen overflow-hidden`}>
+    <div
+      className={`${roboto.variable} ${lalezar.variable} font-sans h-screen overflow-hidden`}>
       <div className="bg-[#111111] p-3 md:p-5 flex flex-col md:flex-row items-center gap-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center text gap-4">
           <Image
             src="/logo-spotify.png"
             alt="logo"
@@ -140,7 +149,7 @@ export default function Home() {
             priority={true}
             className="w-8 h-8 md:w-12 md:h-12 lg:w-[50px] lg:h-[50px]"
           />
-          <h1 className="text-[#39D66E] font-bold text-sm sm:text-sm md:text-4xl lg:text-4xl">
+          <h1 className="font-['Lalezar'] items-center text text-center text-[#39D66E] text-sm sm:text-sm md:text-4xl lg:text-4xl">
             Tokenify
           </h1>
         </div>
@@ -152,7 +161,13 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col justify-center items-center h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636]  px-4 py-8 md:py-12">
-			{!searchInput ? <WelcomeSection /> : <SearchStatus />}
+        {!searchInput ? (
+          <WelcomeSection />
+        ) : artistData ? (
+          <ArtistCard artist={artistData} />
+        ) : (
+          <SearchStatus />
+        )}
       </div>
     </div>
   );
