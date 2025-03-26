@@ -5,10 +5,10 @@ import { Roboto } from 'next/font/google';
 import { useState, useEffect } from 'react';
 
 const roboto = Roboto({ subsets: ['latin'] });
-// const CLIENT_ID = process.env.CLIENT_ID;
-// const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const CLIENT_ID = '3c8858e88a074034a41ac56d973c7ced';
-const CLIENT_SECRET = '5bbcda3d2ea4430cba2002449ebe0578';
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+// const CLIENT_ID = '3c8858e88a074034a41ac56d973c7ced';
+// const CLIENT_SECRET = '5bbcda3d2ea4430cba2002449ebe0578';
 
 export default function Home() {
   const placeholders = ['Search for an artist', 'Search for an artist'];
