@@ -10,7 +10,7 @@ export function WelcomeSection() {
         text="What is Tokenify ?"
       />
       <FadeText
-        className="text-6xl font-bold text-[#BABABA] dark:text-white"
+        className="text-6xl sm:2xl font-bold text-[#BABABA] dark:text-white"
         direction="up"
         framerProps={{
           show: { transition: { delay: 1 } }

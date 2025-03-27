@@ -33,17 +33,27 @@ export function TopTracks({ tracks }) {
                 key={`${colIndex}-${index}`}
                 className="flex items-center gap-2 group">
                 <span className="text-[#BABABA] font-medium min-w-[1.5rem]">
-                  {window.innerWidth < 640 ? index + 1 + (colIndex * 5) : colIndex === 0 ? index + 1 : index + 6}
+                  {window.innerWidth < 640
+                    ? index + 1 + colIndex * 5
+                    : colIndex === 0
+                    ? index + 1
+                    : index + 6}
                 </span>
                 <div className="relative w-12 md:w-16 h-12 md:h-16 flex-shrink-0">
-                  <Image
-                    src={track.image}
-                    alt={track.name}
-                    fill
-                    sizes="(max-width: 768px) 48px, 64px"
-                    className="object-cover rounded"
-                    priority={true}
-                  />
+                  <Link
+                    href={track.spotifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative w-full h-full">
+                    <Image
+                      src={track.image}
+                      alt={track.name}
+                      fill
+                      sizes="(max-width: 768px) 48px, 64px"
+                      className="object-cover rounded transition-transform duration-300 group-hover:scale-105"
+                      priority={true}
+                    />
+                  </Link>
                 </div>
                 <div className="flex-1 min-w-0">
                   <Link

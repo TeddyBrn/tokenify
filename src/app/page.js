@@ -180,17 +180,17 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col justify-start items-center min-h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636] px-4 py-8 md:py-12">
+      <div className="flex flex-col justify-center items-center min-h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636] px-4 py-8 ">
         {!hasSearched ? (
           <WelcomeSection />
         ) : artistData ? (
-          <div className="flex flex-col gap-6 w-full max-w-[90rem]">
-            <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[600px]">
-              <div className="w-full lg:w-1/2 h-[400px] lg:h-full">
+          <div className="flex flex-col gap-6 h-full w-full max-w-[90rem]">
+            <div className="flex flex-col xl:flex-row gap-6 h-auto xl:h-[600px]">
+              <div className="w-full xl:w-1/2 h-[400px] xl:h-full">
                 <ArtistCard artist={artistData} />
               </div>
               {topTracks && (
-                <div className="w-full lg:w-1/2 h-[810px] md:h-[560px] lg:h-full ">
+                <div className="w-full xl:w-1/2 h-[810px] md:h-[560px] lg:h-full ">
                   <TopTracks tracks={topTracks} />
                 </div>
               )}
