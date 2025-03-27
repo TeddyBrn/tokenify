@@ -16,12 +16,12 @@ export function Albums({ albums }) {
     <div className="w-full bg-black/20 backdrop-blur-sm rounded-lg p-6 mb-12">
       <h2 className="text-3xl font-bold text-[#39D66E] mb-6">Discography</h2>
       <div className="relative">
-        <Carousel>
+        <Carousel disableDrag={false}>
           <CarouselContent className="-ml-4">
             {albums.map((album, index) => (
               <CarouselItem
                 key={index}
-                className="basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4">
+                className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4">
                 <div className="flex flex-col group">
                   <Link
                     href={album.spotifyUrl}
@@ -34,7 +34,7 @@ export function Albums({ albums }) {
                       fill
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      priority={true}
+                      loading="lazy"
                     />
                   </Link>
                   <Link

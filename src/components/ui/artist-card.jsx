@@ -21,7 +21,7 @@ export function ArtistCard({ artist }) {
         fill
         sizes="(max-width: 768px) 100vw, 50vw"
         className="object-cover opacity-75"
-        priority={true}
+        loading="eager" // Changed from priority
       />
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
         <Link

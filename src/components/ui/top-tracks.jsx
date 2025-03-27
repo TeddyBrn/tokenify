@@ -51,7 +51,7 @@ export function TopTracks({ tracks }) {
                       fill
                       sizes="(max-width: 768px) 48px, 64px"
                       className="object-cover rounded transition-transform duration-300 group-hover:scale-105"
-                      priority={true}
+                      loading="lazy" // Changed from priority
                     />
                   </Link>
                 </div>

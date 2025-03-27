@@ -126,8 +126,6 @@ export default function Home() {
         }));
 
         setAlbums(albumsData);
-
-        console.log(dataAlbums.items[0]);
       }
 
       // Get top tracks of the artist
@@ -165,9 +163,8 @@ export default function Home() {
             alt="logo"
             width={50}
             height={50}
-            priority={true}
-            loading="eager"
             className="w-8 h-8 md:w-12 md:h-12 lg:w-[50px] lg:h-[50px]"
+            loading="lazy" // Changed from priority
           />
           <h1 className="font-['Lalezar'] items-center text text-center text-[#39D66E] text-sm sm:text-sm md:text-4xl lg:text-4xl">
             Tokenify
