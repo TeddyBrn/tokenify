@@ -14,8 +14,7 @@ export function ArtistCard({ artist }) {
   };
 
   return (
-    <div
-      className={` relative w-full max-w-2xl aspect-square overflow-hidden rounded-lg`}>
+    <div className="relative w-full h-full aspect-auto overflow-hidden rounded-lg">
       <Image
         src={artist.image}
         alt={artist.name}

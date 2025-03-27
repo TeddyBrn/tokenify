@@ -12,6 +12,9 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   transpilePackages: ['framer-motion'],
+  experimental: {
+    optimizePackageImports: ['framer-motion']
+  }
 };
 
 export default nextConfig;

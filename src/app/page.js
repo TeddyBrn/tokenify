@@ -158,7 +158,7 @@ export default function Home() {
   return (
     <div
       className={`${roboto.variable} ${lalezar.variable} font-sans h-screen overflow-auto scrollbar-hide`}>
-      <div className="bg-[#111111] p-3 md:p-5 flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-[#111111] p-3 md:p-5 flex flex-col lg:flex-row items-center gap-4">
         <div className="flex items-center text gap-4">
           <Image
             src="/logo-spotify.png"
@@ -180,14 +180,20 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col justify-center items-center h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636]  px-4 py-8 md:py-12 ">
+      <div className="flex flex-col justify-start items-center min-h-[calc(100%-4rem)] gap-6 bg-linear-to-t/longer from-[#0a0a0a] to-[#363636] px-4 py-8 md:py-12">
         {!hasSearched ? (
           <WelcomeSection />
         ) : artistData ? (
-          <div className="flex flex-col gap-6 w-full max-w-6xl">
-            <div className="flex flex-col md:flex-row gap-6">
-              <ArtistCard artist={artistData} />
-              {topTracks && <TopTracks tracks={topTracks} />}
+          <div className="flex flex-col gap-6 w-full max-w-[90rem]">
+            <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[600px]">
+              <div className="w-full lg:w-1/2 h-[400px] lg:h-full">
+                <ArtistCard artist={artistData} />
+              </div>
+              {topTracks && (
+                <div className="w-full lg:w-1/2 h-[810px] md:h-[560px] lg:h-full ">
+                  <TopTracks tracks={topTracks} />
+                </div>
+              )}
             </div>
             {albums && <Albums albums={albums} />}
           </div>

@@ -11,14 +11,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <link 
-          rel="preload"
-          href="/logo-spotify.png"
-          as="image"
-          type="image/png"
-        />
-      </head>
       <body>{children}</body>
     </html>
   );
