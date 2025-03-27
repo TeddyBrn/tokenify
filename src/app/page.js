@@ -51,7 +51,7 @@ export default function Home() {
   // Input change event handler
   const handleChange = (e) => {
     setSearchInput(e.target.value);
-    setHasSearched(false);
+    
   };
 
   const onSubmit = (e) => {
