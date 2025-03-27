@@ -109,7 +109,7 @@ export default function Home() {
       // Get albums of the artist
       if (findArtist) {
         const response = await fetch(
-          `https://api.spotify.com/v1/artists/${findArtist.id}/albums?include_groups=album&market=FR`,
+          `https://api.spotify.com/v1/artists/${findArtist.id}/albums?include_groups=album%2Ccompilation&market=fr`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`

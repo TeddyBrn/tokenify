@@ -14,7 +14,7 @@ export function Albums({ albums }) {
 
   return (
     <div className="w-full bg-black/20 backdrop-blur-sm rounded-lg p-6 mb-12">
-      <h2 className="text-3xl font-bold text-[#39D66E] mb-6">Discography</h2>
+      <h2 className="text-3xl font-bold text-[#39D66E] mb-6">Albums</h2>
       <div className="relative">
         <Carousel disableDrag={false}>
           <CarouselContent className="-ml-4">
@@ -61,3 +61,27 @@ export function Albums({ albums }) {
     </div>
   );
 }
+
+const Profile = () => {
+  // ...existing code...
+
+  return (
+    <div className="profile">
+      <div className="profile-header">
+        {/* ...existing header code... */}
+      </div>
+
+      {/* Only show albums section if albums array has items */}
+      {albums && albums.length > 0 && (
+        <div className="albums-section">
+          <h2>Albums</h2>
+          <div className="albums-grid">
+            {albums.map((album) => (
+              <AlbumCard key={album.id} album={album} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
